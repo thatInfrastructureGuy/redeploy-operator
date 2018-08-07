@@ -1,0 +1,3 @@
+apiVersion: app.thatinfrastructureguy.com/v1alpha1
+kind: Redeploy
+projectName: redeploy-operator

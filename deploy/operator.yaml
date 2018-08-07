@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redeploy-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: redeploy-operator
+  template:
+    metadata:
+      labels:
+        name: redeploy-operator
+    spec:
+      containers:
+        - name: redeploy-operator
+          image: thinguy/redeploy-operator:0.1
+          ports:
+          - containerPort: 60000
+            name: metrics
+          command:
+          - redeploy-operator
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: OPERATOR_NAME
+              value: "redeploy-operator"

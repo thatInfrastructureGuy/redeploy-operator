@@ -6,6 +6,13 @@ metadata:
       app: redeploy-operator
 ---
 
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: redeploy-operator
+  namespace: redeploy-operator
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,9 +28,10 @@ spec:
       labels:
         name: redeploy-operator
     spec:
+      serviceAccountName: redeploy-operator
       containers:
         - name: redeploy-operator
-          image: thinguy/redeploy-operator:0.1
+          image: thinguy/redeploy-operator:0.5
           ports:
           - containerPort: 60000
             name: metrics

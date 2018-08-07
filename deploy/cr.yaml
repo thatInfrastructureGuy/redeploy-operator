@@ -2,6 +2,7 @@ apiVersion: "app.thatinfrastructureguy.com/v1alpha1"
 kind: "Redeploy"
 metadata:
   name: "redeploy-nginx"
+  namespace: redeploy-operator
 spec:
     redeployNeeded: true
     deploymentName: "nginx"

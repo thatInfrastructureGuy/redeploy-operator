@@ -1,7 +1,16 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: redeploy-operator
+  labels:
+      app: redeploy-operator
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redeploy-operator
+  namespace: redeploy-operator
 spec:
   replicas: 1
   selector:

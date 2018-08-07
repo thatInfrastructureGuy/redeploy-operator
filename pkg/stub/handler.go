@@ -25,7 +25,7 @@ func (h *Handler) Handle(ctx context.Context, event sdk.Event) error {
 	switch o := event.Object.(type) {
 	case *v1alpha1.Redeploy:
 		if o.Spec.RedeployNeeded && len(o.Spec.DeploymentName) > 0 && len(o.Spec.DeploymentNamespace) > 0 {
-			fmt.Println("Redeploy is set to TRUE!!!")
+			fmt.Println("Got a trigger to redeploy!")
 			currentTime := time.Now()
 			redeployDate := currentTime.Format("2006-01-02-15_04_05")
 
@@ -46,14 +46,15 @@ func (h *Handler) Handle(ctx context.Context, event sdk.Event) error {
 			}
 
 			deploymentsClient := clientset.AppsV1().Deployments(o.Spec.DeploymentNamespace)
-			fmt.Printf("Redeploying %s at %s", o.Spec.DeploymentName, redeployDate)
+			fmt.Printf("Redeploying %s at %s\n", o.Spec.DeploymentName, redeployDate)
 
 			retryErr := retry.RetryOnConflict(retry.DefaultRetry, func() error {
 				// Retrieve the latest version of Deployment before attempting update
 				// RetryOnConflict uses exponential backoff to avoid exhausting the apiserver
 				result, getErr := deploymentsClient.Get(o.Spec.DeploymentName, metav1.GetOptions{})
 				if getErr != nil {
-					fmt.Printf("Failed to get latest version of Deployment: %v", getErr)
+					fmt.Printf("Error redeploying deployment: %s in namespace %s\n", o.Spec.DeploymentName, o.Spec.DeploymentNamespace)
+					fmt.Printf("%v\n", getErr)
 					return getErr
 				}
 
@@ -64,13 +65,11 @@ func (h *Handler) Handle(ctx context.Context, event sdk.Event) error {
 			})
 
 			if retryErr != nil {
-				fmt.Printf("Update failed: %v", retryErr)
+				fmt.Printf("Update failed: %v\n", retryErr)
 			} else {
-				fmt.Printf("Redeployed %s", o.Spec.DeploymentName)
+				fmt.Printf("Redeployed %s\n", o.Spec.DeploymentName)
 			}
 
-		} else {
-			fmt.Println("Nothing to Redeploy!")
 		}
 	}
 	return nil

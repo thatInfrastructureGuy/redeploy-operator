@@ -7,7 +7,7 @@ This project is built with help of [Operator-SDK](https://github.com/operator-fr
 Redeploy Operator basically adds a label to PodSpec field in deployments. 
 This triggers a deployment rollout. Type of rollout depends on `MaxSurge` and `MaxUnavailable` fields in your deployments.
 
-The label you will see added is the datetime field.
+The label you will see added is the datetime (UTC) field.
 Eg:   `redeployed: 2018-08-07-05_28_41`
 
 ### Limitations:

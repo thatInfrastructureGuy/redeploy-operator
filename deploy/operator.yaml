@@ -29,10 +29,9 @@ spec:
         name: redeploy-operator
     spec:
       serviceAccountName: redeploy-operator
-      #      automountServiceAccountToken: false
       containers:
         - name: redeploy-operator
-          image: thinguy/redeploy-operator:0.1
+          image: thinguy/redeploy-operator:0.5
           ports:
           - containerPort: 60000
             name: metrics

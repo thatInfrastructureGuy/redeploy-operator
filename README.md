@@ -41,6 +41,31 @@ kubectl -n nginx get pods -w
 kubectl -n redeploy-operator logs -l name=redeploy-operator
 ```
 
+5. Check status
+
+    1. Check the custom resource.
+
+      `kubectl -n redeploy-operator get redeploies -o yaml`
+
+      You should see RedeployNeeded set to `false` and status fields appended.
+ 
+      ```
+      spec:
+        DeploymentName: nginx
+        DeploymentNamespace: nginx
+        RedeployNeeded: false
+      status:
+        Date: 2018-08-07-05_28_41
+        Status: REDEPLOYED
+      ```
+
+    2. Check the deployment
+
+      `kubectl -n nginx get deployment nginx -o yaml | grep redeployed`
+
+      ```
+       redeployed: 2018-08-07-05_28_41
+      ```
 
 ### Building from source:
 
